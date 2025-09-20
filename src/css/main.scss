@@ -1,1 +1,242 @@
-/* Your SCSS here. */
+// ===== Variables =====
+$bg: #0f1220;
+$panel: #151a2f;
+$ink: #e9ecff;
+$muted: #b6bbd9;
+$primary: #6cf1ff;
+$accent: #8a7dff;
+$radius: 14px;
+$shadow: 0 12px 28px rgba(0,0,0,.25);
+$container: 1100px;
+.carousel__slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;   
+    border-radius: 12px;
+  }
+  
+  .agent__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 14px;
+    display: block;
+  }
+  .carousel__slide {
+    aspect-ratio: 16 / 9;   
+    overflow: hidden;
+  }
+  
+  .agent__media {
+    aspect-ratio: 4 / 5;    
+    overflow: hidden;
+  }
+
+$breakpoints: ( sm: 640px, md: 768px, lg: 1024px );
+
+@keyframes fade-up {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .reveal { opacity: 0; transform: translateY(18px); }
+  .reveal.is_visable{
+    animation: fade-up .6s ease forwards;
+  }
+  
+
+// ===== Mixins =====
+@mixin respond($bp) { @media (min-width: map-get($breakpoints, $bp)) { @content; } }
+@mixin btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: .6rem 1rem; border-radius: .9rem; border: 1px solid transparent;
+  font-weight: 700; cursor: pointer; text-decoration: none;
+  transition: transform .2s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
+  &:hover { transform: translateY(-2px); box-shadow: $shadow; }
+}
+
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color: $ink;
+  background:
+    radial-gradient(900px 520px at 10% -10%, rgba(108,241,255,.06), transparent 60%),
+    radial-gradient(800px 520px at 100% 0%, rgba(138,125,255,.07), transparent 60%),
+    $bg;
+}
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; text-decoration: none; }
+section { padding: clamp(2.5rem, 6vw, 5rem) 1rem; }
+section > * { max-width: $container; margin-inline: auto; }
+
+
+.navbar {
+    font-size: 1rem;
+    .navbar__brand { font-size: clamp(1.1rem, 2.2vw, 1.35rem); }
+    .navbar__menu a { font-size: 1rem; }
+  }
+  .navbar.is-shrink {
+    font-size: 0.8rem;
+    .navbar__brand { font-size: clamp(0.7rem, 1.8vw, 1.0rem); }
+    .navbar__menu a { font-size: 0.8rem; }
+  }
+  
+.navbar {
+  position: sticky; top: 0; z-index: 50;
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: .75rem;
+  padding: .75rem 1rem; background: rgba(10,12,24,.7); backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(108,241,255,.15);
+  transition: padding .25s ease, background .25s ease;
+
+  &.is-shrink { padding-block: .4rem; background: rgba(10,12,24,.9); }
+
+  .navbar__brand { font-weight: 800; span { color: $primary; } }
+
+  .navbar__toggle {
+    display: inline-flex; width: 40px; height: 40px; align-items: center; justify-content: center;
+    background: transparent; color: $ink; border: 1px solid rgba(255,255,255,.15); border-radius: 8px;
+    @include respond(md) { display: none; }
+  }
+
+  .navbar__menu {
+    list-style: none; margin: 0; padding: 0; display: none;
+    @include respond(md) { display: flex; justify-content: center; gap: .75rem; }
+    a {
+      display: inline-block; padding: .4rem .7rem; border-radius: .6rem; font-weight: 700; color: $muted;
+      &:hover { color: $ink; background: rgba(108,241,255,.08); }
+      &.is-active { color: $ink; background: rgba(108,241,255,.18); }
+    }
+  }
+
+  &.is-open .navbar__menu {
+    display: grid; grid-column: 1 / -1; grid-row: 2; gap: .5rem; padding-bottom: .6rem;
+    @include respond(md) { display: flex; grid-row: auto; padding-bottom: 0; }
+  }
+
+  .navbar__progress {
+    grid-column: 1 / -1; height: 3px; background: rgba(255,255,255,.08); margin-top: .5rem;
+    span { display: block; height: 100%; width: 0%; background: linear-gradient(90deg, $primary, $accent); }
+    @include respond(md) { grid-column: 3; grid-row: 1; margin-top: 0; width: 220px; }
+  }
+}
+
+// ===== Hero (centered) =====
+.hero {
+  min-height: 70vh; display: grid; place-items: center; text-align: center;
+  background: linear-gradient(180deg, rgba(108,241,255,.06), transparent);
+  h1 { margin: 0 0 .5rem; font-size: clamp(2rem, 6vw, 3rem); }
+  p  { margin: 0 0 1.25rem; color: $muted; }
+  .btn { @include btn; background: $primary; color: #0a0b10; }
+}
+
+.about {
+  background: $panel;
+  .about__columns {
+    column-count: 1; column-gap: 1.5rem;
+    p { break-inside: avoid; color: $muted; }
+    @include respond(lg) { column-count: 2; }
+  }
+}
+
+
+.fixed-bg {
+  min-height: 45vh;
+  display: grid; place-items: center; text-align: center;
+  color: $ink;
+  background: url("../assets/k.png") center/cover fixed; // 可按需换一张
+  h2 { margin: 0 0 .5rem; }
+  p  { margin: 0; color: $muted; }
+}
+
+
+.agent {
+  display: grid; gap: 1rem; align-items: center;
+  @include respond(md) { grid-template-columns: 1fr 1fr; }
+  &__media { border-radius: $radius; overflow: hidden; box-shadow: $shadow; }
+  &__copy  { padding: .5rem 0;
+    h2 { margin: .2rem 0 .5rem; }
+    p  { margin: 0; color: $muted; }
+  }
+  &--flip {
+    @include respond(md) {
+      grid-template-columns: 1fr 1fr;
+      .agent__media { order: 2; }
+      .agent__copy  { order: 1; }
+    }
+  }
+}
+
+
+.gallery .carousel {
+  position: relative; overflow: hidden; border-radius: $radius;
+  border: 1px solid rgba(255,255,255,.08); box-shadow: $shadow; background: #0b0e1e;
+
+  &__track { display: flex; transition: transform .4s ease; }
+  &__slide { min-width: 100%; aspect-ratio: 16/9; background: #0c1022; }
+
+  &__control {
+    @include btn;
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 40px; height: 40px; padding: 0; background: rgba(0,0,0,.6); color: $ink;
+
+    &[data-carousel="prev"] { left: .5rem; }
+    &[data-carousel="next"] { right: .5rem; }
+  }
+}
+
+
+.contact { text-align: center; }
+
+.social { display: flex; gap: .75rem; justify-content: center; margin: 1rem 0 1.5rem;
+  .social__link { display: inline-grid; place-items: center; width: 42px; height: 42px;
+    border-radius: 10px; border: 1px solid rgba(108,241,255,.15); background: $panel; }
+}
+
+.modal {
+  position: fixed; inset: 0; display: none; place-items: center;
+  &.is-open { display: grid; }
+
+  &__overlay { position: absolute; inset: 0; background: rgba(0,0,0,.6); }
+
+  &__dialog {
+    position: relative; z-index: 1; background: $panel; color: $ink;
+    border-radius: $radius; padding: 1.25rem; box-shadow: $shadow;
+    width: min(95vw, 520px);
+    .form { display: grid; gap: .75rem;
+      label { display: grid; gap: .35rem; color: $muted; }
+      input, textarea {
+        background: #0c1022; color: $ink; border: 1px solid rgba(255,255,255,.12);
+        border-radius: .7rem; padding: .7rem .9rem; font: inherit;
+        &:focus { outline: 2px solid rgba($primary,.35); border-color: rgba($primary,.45); }
+      }
+      button { @include btn; background: $primary; color: #0a0b10; }
+    }
+  }
+
+  &__close { position: absolute; top: .5rem; right: .5rem; background: none; border: 0; color: $ink; font-size: 1.1rem; cursor: pointer; }
+}
+.video {
+    text-align: center;
+    padding: 3rem 1rem;
+  
+    h2 {
+      margin-bottom: 1rem;
+    }
+  
+    video {
+      display: block;
+      margin: 0 auto;
+      width: 100%;         
+      max-width: 720px;      
+      max-height: 400px;      
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,.35);
+      object-fit: cover;    
+    }
+  }
+
+.footer { text-align: center; background: #07080f; color: $muted; padding: 1.5rem 0;
+  a { margin-left: .5rem; color: $primary; }
+}
